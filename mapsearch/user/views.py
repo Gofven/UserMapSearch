@@ -18,14 +18,19 @@ class UserLoginSchema(Schema):
     password: str
 
 
-@api.post("/register")
-async def register(request, user_details: UserRegisterSchema, auth=None):
+@api.get("/user", response=UserSchema)
+async def get_user(request):
+    return request.auth
+
+
+@api.post("/register", auth=None)
+async def register(request, user_details: UserRegisterSchema):
     user = await User.objects.acreate_user(**user_details.dict())
     return UserSchema(email=user.email)
 
 
-@api.post("/login")
-async def login(request, login_details: UserLoginSchema, auth=None):
+@api.post("/login", auth=None)
+async def login(request, login_details: UserLoginSchema):
     try:
         user = await User.objects.aget(email=login_details.email)
 
