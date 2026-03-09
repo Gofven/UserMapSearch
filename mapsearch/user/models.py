@@ -2,6 +2,7 @@ import secrets
 
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.db import models, IntegrityError
+from django.contrib.gis.db import models as gis_models
 from ninja.errors import ValidationError
 
 
@@ -30,5 +31,5 @@ def generate_api_key():
 class User(AbstractBaseUser):
     email = models.EmailField(unique=True, max_length=120)
     api_key = models.CharField(max_length=128, default=generate_api_key)
-
+    location_point = gis_models.PointField(null=True, blank=True)
     objects = CustomUserManager()

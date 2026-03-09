@@ -79,7 +79,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-db_data = dict(ENGINE='django.db.backends.postgresql')
+db_data = dict(ENGINE='django.contrib.gis.db.backends.postgis')
 if all([env(x) for x in ['DB_NAME', 'DB_USER', 'DB_PASSWORD', 'DB_HOST', 'DB_PORT']]):
     db_data['NAME'] = env('DB_NAME')
     db_data['USER'] = env('DB_USER')
@@ -128,3 +128,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# GDAL paths (conda)
+if os.name == 'nt':
+    gdal_file = 'gdal.dll'
+else:
+    gdal_file = 'libgdal.so'
+
+GDAL_LIBRARY_PATH = os.path.join(os.environ['CONDA_PREFIX'], 'Library', 'bin', gdal_file)
