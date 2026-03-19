@@ -7,13 +7,17 @@ from backend.api import api
 from mapsearch.user.models import User
 
 
-class UserSchema(Schema):
+class BasicUserSchema(Schema):
     email: str
+
+
+class UserSchema(BasicUserSchema):
     latitude: float = Field(None, alias='location_point.y')
     longitude: float = Field(None, alias='location_point.x')
 
 
-class UserRegisterSchema(UserSchema):
+class UserRegisterSchema(Schema):
+    email: str
     password: str
 
 
@@ -72,10 +76,10 @@ async def user_list(request, user_list_schema: Query[UserListSchema]):
     return User.objects.filter(**filters)
 
 
-@api.post("/register", tags=['user'], auth=None)
+@api.post("/register", tags=['user'], auth=None, response=BasicUserSchema)
 async def register(request, user_details: UserRegisterSchema):
     user = await User.objects.acreate_user(**user_details.dict())
-    return UserSchema(email=user.email)
+    return user
 
 
 @api.post("/login", tags=['user'], auth=None)
