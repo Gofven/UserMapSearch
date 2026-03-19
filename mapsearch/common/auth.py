@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Any, Optional
 
 from django.http import HttpRequest
-from ninja.errors import logger
+from ninja.errors import logger, HttpError
 from ninja.security import HttpBearer
 
 from backend import settings
@@ -36,6 +36,10 @@ class AsyncHttpBearer(HttpBearer, ABC):
 
 class UserAuth(AsyncHttpBearer):
     async def authenticate(self, request: HttpRequest, token: str) -> Optional[Any]:
-        user = await User.objects.aget(api_key=token)
+        try:
+            user = await User.objects.aget(api_key=token)
+
+        except User.DoesNotExist:
+            raise HttpError(401, "API token is invalid.")
 
         return user
