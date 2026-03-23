@@ -18,7 +18,7 @@ e.g. `docker compose up --build -d`.
 ## API Test Guide
 ### Creating User
 To access the APIs to test, by default, it's located at http://127.0.0.1:8000/api/docs.
-To create a user, use `/api/r   egister` and supply with any email and password (e.g. `a@a.se` for testing).
+To create a user, use `/api/register` and supply with any email and password (e.g. `a@a.se` for testing).
 Then, access the API key using `/api/login`.
 
 To authorize the user, at the top right of the page there is an 'Authorize' tab, 
