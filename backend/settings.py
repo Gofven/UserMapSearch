@@ -7,8 +7,9 @@ import environ
 BASE_DIR = Path(__file__).resolve().parent.parent
 TESTING = sys.argv[1:2] == ['test'] or "pytest" in sys.modules
 
-env = environ.Env(DEBUG=(bool, False),
+env = environ.Env(DEBUG=(bool, True),
                   DJANGO_SECRET=(str, None),
+                  ALLOWED_HOSTS=(str, None),
                   DB_NAME=(str, 'postgres'),
                   DB_USER=(str, 'postgres'),
                   DB_PASSWORD=(str, 'postgres'),
@@ -18,6 +19,10 @@ env = environ.Env(DEBUG=(bool, False),
                   PG_PASS=(str, None))
 
 env.read_env(os.path.join(BASE_DIR, ".env"))
+
+DEBUG = os.getenv('DEBUG')
+
+ALLOWED_HOSTS = [] if not os.getenv('ALLOWED_HOSTS') else os.getenv('ALLOWED_HOSTS').split(',')
 
 # Secret management
 SECRET_KEY = os.getenv('DJANGO_SECRET')
@@ -29,10 +34,6 @@ if not SECRET_KEY:  # Generate the secret key if not present
 
     with open(os.path.join(BASE_DIR, ".env"), "a+") as env_file:
         env_file.write(f"\nDJANGO_SECRET={SECRET_KEY}\n")
-
-DEBUG = os.getenv('DEBUG')
-
-ALLOWED_HOSTS = []
 
 # Application definition
 
@@ -131,8 +132,9 @@ STATIC_URL = 'static/'
 
 # GDAL paths (conda)
 if os.name == 'nt':
-    gdal_file = 'gdal.dll'
-else:
-    gdal_file = 'libgdal.so'
+    gdal_file_path = ('Library', 'bin', 'gdal.dll')
 
-GDAL_LIBRARY_PATH = os.path.join(os.environ['CONDA_PREFIX'], 'Library', 'bin', gdal_file)
+else:
+    gdal_file_path = ('lib', 'libgdal.so')
+
+GDAL_LIBRARY_PATH = os.path.join(os.environ['CONDA_PREFIX'], *gdal_file_path)
