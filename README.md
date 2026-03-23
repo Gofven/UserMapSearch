@@ -9,8 +9,8 @@ file that overrides it (see .env.example)
 Install docker compose here: https://hub.docker.com/welcome
 
 To set up the project through docker compose, run `docker compose up -d` within this directory.
-There is no need for any additional fields if the .env.example defaults are agreeable.
-A DJANGO_SECRET key will be generated automatically into a .env file within the container.
+There is no need for a .env file if the .env.defaults default fields are agreeable.
+A DJANGO_SECRET key will be generated automatically into a .env file inside the container.
 Changes to `backend` and `mapsearch` folder will be reflected on the container.
 If you wish to change anything outside of these folders, add the `--build` flag to the docker compose command
 e.g. `docker compose up --build -d`.
